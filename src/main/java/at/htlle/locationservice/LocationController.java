@@ -11,17 +11,18 @@ import java.util.List;
 @RequestMapping("/locations")
 public class LocationController {
 
-    private static final List<Location> knownLocations = new ArrayList<>();
+    private final List<Location> knownLocations;
 
-    static {
+    public LocationController() {
+        knownLocations = new ArrayList<>();
         knownLocations.add(new Location("Leoben", 47.383333, 15.1));
         knownLocations.add(new Location("Bruck", 47.416667, 15.266667));
         knownLocations.add(new Location("Kapfenberg", 47.433333, 15.316667));
         knownLocations.add(new Location("Mariazell", 47.769722, 15.316667));
     }
 
-    @GetMapping("/{name}")
-    public ResponseEntity<Location> getLocationByName(@PathVariable String name) {
+    @GetMapping
+    public ResponseEntity<Location> getLocationByName(@RequestParam(value = "name", defaultValue = "World") String name) {
         for (Location location : knownLocations) {
             if (location.getName().equals(name)) {
                 return new ResponseEntity<>(location, HttpStatus.OK);
@@ -29,13 +30,15 @@ public class LocationController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
-    @PostMapping
-    public ResponseEntity<Location> createLocation(@RequestBody Location location) {
-        // Hier könnten wir die empfangene Location-Instanz in einer Datenbank speichern oder
-        // anderweitig verarbeiten. Hier geben wir einfach die empfangene Location-Instanz
-        // zurück, um zu zeigen, dass die Erstellung erfolgreich war.
-        knownLocations.add(location);
-        return new ResponseEntity<>(location, HttpStatus.CREATED);
-    }
+    /*@GetMapping("/{name}/distance")
+    public ResponseEntity<Double> getDistanceToKnownLocation(@PathVariable String name, @RequestParam Double latitude, @RequestParam Double longitude) {
+        Location location = getLocationByName(name).getBody();
+        if (location == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            Location otherLocation = new Location("Custom Location", latitude, longitude);
+            Double distance = location.distanceTo(otherLocation);
+            return new ResponseEntity<>(distance, HttpStatus.OK);
+        }
+    }*/
 }
