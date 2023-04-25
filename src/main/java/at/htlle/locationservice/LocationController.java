@@ -30,15 +30,4 @@ public class LocationController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-    /*@GetMapping("/{name}/distance")
-    public ResponseEntity<Double> getDistanceToKnownLocation(@PathVariable String name, @RequestParam Double latitude, @RequestParam Double longitude) {
-        Location location = getLocationByName(name).getBody();
-        if (location == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            Location otherLocation = new Location("Custom Location", latitude, longitude);
-            Double distance = location.distanceTo(otherLocation);
-            return new ResponseEntity<>(distance, HttpStatus.OK);
-        }
-    }*/
 }
