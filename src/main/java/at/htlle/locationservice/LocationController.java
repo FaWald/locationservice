@@ -5,10 +5,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
-@RequestMapping("/locations")
+@RequestMapping
 public class LocationController {
 
     private final List<Location> knownLocations;
@@ -21,7 +23,7 @@ public class LocationController {
         knownLocations.add(new Location("Mariazell", 47.769722, 15.316667));
     }
 
-    @GetMapping
+    @GetMapping("/locations")
     public ResponseEntity<Location> getLocationByName(@RequestParam(value = "name", defaultValue = "World") String name) {
         for (Location location : knownLocations) {
             if (location.getName().equals(name)) {
@@ -30,4 +32,11 @@ public class LocationController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+    @GetMapping("/nextknownlocation")
+    public ResponseEntity<Location> getNearestLocation(@RequestParam(value = "latitude") double latitude,
+                                                       @RequestParam(value = "longitude") double longitude) {
+        Location nearest = Collections.min(knownLocations, Comparator.comparingDouble(l -> l.distanceTo(new Location("", latitude, longitude))));
+        return new ResponseEntity<>(nearest, HttpStatus.OK);
+    }
+
 }
