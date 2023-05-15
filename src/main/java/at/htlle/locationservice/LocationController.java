@@ -55,4 +55,15 @@ public class LocationController {
         Location nearest = Collections.min(knownLocations, Comparator.comparingDouble(l -> l.distanceTo(new Location("", latitude, longitude))));
         return new ResponseEntity<>(nearest, HttpStatus.OK);
     }
+    @GetMapping("/altitudeof")
+    public ResponseEntity<Location> altitude() {
+        // Auslesen von srtm_40_03.asc
+
+        // Als File - Objekt der SrtmFile.java übergeben für die Datenverarbeitung
+
+        // Gibt die Daten als JSOn String aus. Example-Output: {"loc" :{"name": "","":"","":""}, "":""}
+
+        return null;
+    }
+
 }
