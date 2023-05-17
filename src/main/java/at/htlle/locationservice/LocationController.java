@@ -4,16 +4,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.io.File;
+import java.util.*;
 
 @RestController
 @RequestMapping
 public class LocationController {
 
     private final List<Location> knownLocations;
+    private SrtmFile srtmFile;
 
     public LocationController() {
         knownLocations = new ArrayList<>();
@@ -50,18 +49,20 @@ public class LocationController {
      * @return ResponseEntity<Location> - eine Antwort mit dem nächstgelegenen bekannten Ort und dem HTTP-Status-Code "OK"
      */
     @GetMapping("/nextknownlocation")
-    public ResponseEntity<Location> getNearestLocation(@RequestParam(value = "latitude") double latitude,
-                                                       @RequestParam(value = "longitude") double longitude) {
+    public ResponseEntity<Location> getNearestLocation(@RequestParam(value = "latitude") double latitude, @RequestParam(value = "longitude") double longitude) {
         Location nearest = Collections.min(knownLocations, Comparator.comparingDouble(l -> l.distanceTo(new Location("", latitude, longitude))));
         return new ResponseEntity<>(nearest, HttpStatus.OK);
     }
+
     @GetMapping("/altitudeof")
-    public ResponseEntity<Location> altitude() {
+    public ResponseEntity<Location> altitude(@RequestParam(value = "latitude") double latitude, @RequestParam(value = "longitude") double longitude) {
         // Auslesen von srtm_40_03.asc
+        File file = new File("srtm_40_03.asc");
+        SrtmFile srtmFile = new SrtmFile(file);
 
         // Als File - Objekt der SrtmFile.java übergeben für die Datenverarbeitung
 
-        // Gibt die Daten als JSOn String aus. Example-Output: {"loc" :{"name": "","":"","":""}, "":""}
+        // Gibt die Daten als JSON String aus. Example-Output: {"loc" :{"name": "","":"","":""}, "":""}
 
         return null;
     }
