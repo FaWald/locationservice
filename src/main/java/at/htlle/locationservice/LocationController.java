@@ -55,16 +55,25 @@ public class LocationController {
     }
 
     @GetMapping("/altitudeof")
-    public ResponseEntity<Location> altitude(@RequestParam(value = "latitude") double latitude, @RequestParam(value = "longitude") double longitude) {
+    public ResponseEntity<String> altitude(@RequestParam(value = "latitude") double latitude, @RequestParam(value = "longitude") double longitude) {
         // Auslesen von srtm_40_03.asc
         File file = new File("srtm_40_03.asc");
-        SrtmFile srtmFile = new SrtmFile(file);
 
         // Als File - Objekt der SrtmFile.java übergeben für die Datenverarbeitung
+        SrtmFile srtmFile = new SrtmFile(file);
 
-        // Gibt die Daten als JSON String aus. Example-Output: {"loc" :{"name": "","":"","":""}, "":""}
+        // Location
+        String name = "Picked location";
+        Location location = new Location(name, latitude, longitude);
 
-        return null;
+        // Höhe für die Location abrufen
+        Optional<Double> altitude = srtmFile.getAltitudeForLocation(location);
+
+        // JSON-String erstellen
+        String json = "{\"loc\":{\"name\":\"" + name + "\",\"latitude\":\"" + latitude + "\",\"longitude\":\"" + longitude + "\"},\"altitude\":\"" + altitude + "\"}";
+
+        // ResponseEntity mit JSON-String als Körper zurückgeben
+        return ResponseEntity.ok().body(json);
     }
 
 
