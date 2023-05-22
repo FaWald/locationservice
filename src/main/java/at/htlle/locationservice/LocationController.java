@@ -76,6 +76,7 @@ public class LocationController {
         return new ResponseEntity<>(nearest, HttpStatus.OK);
     }
 
+
     @GetMapping("/altitudeof")
     public ResponseEntity<String> altitude(@RequestParam(value = "latitude") double latitude, @RequestParam(value = "longitude") double longitude) {
         // Auslesen von srtm_40_03.asc
