@@ -87,29 +87,29 @@ public class LocationController {
 
         // Location
         Location nearestLocation = Collections.min(knownLocations, Comparator.comparingDouble(l -> l.distanceTo(new Location("", latitude, longitude))));
-        Double azimuth = nearestLocation.directionTo(new Location("",latitude, longitude));
+        Double azimuth = nearestLocation.directionTo(new Location("", latitude, longitude));
         String direction = "";
         if (azimuth >= 337.5 || azimuth < 22.5) {
             direction = "Nördlich";
         } else if (azimuth >= 22.5 && azimuth < 67.5) {
-            direction ="Nordöstlich";
+            direction = "Nordöstlich";
         } else if (azimuth >= 67.5 && azimuth < 112.5) {
-            direction ="Östlich";
+            direction = "Östlich";
         } else if (azimuth >= 112.5 && azimuth < 157.5) {
-            direction ="Südöstlich";
+            direction = "Südöstlich";
         } else if (azimuth >= 157.5 && azimuth < 202.5) {
-            direction ="Südlich";
+            direction = "Südlich";
         } else if (azimuth >= 202.5 && azimuth < 247.5) {
-            direction ="Südwestlich";
+            direction = "Südwestlich";
         } else if (azimuth >= 247.5 && azimuth < 292.5) {
-            direction ="Westlich";
+            direction = "Westlich";
         } else if (azimuth >= 292.5 && azimuth < 337.5) {
-            direction ="Nordwestlich";
+            direction = "Nordwestlich";
         } else {
-            direction ="Unbekannte Richtung";
+            direction = "Unbekannte Richtung";
         }
         DecimalFormat decimalFormat = new DecimalFormat("0.0");
-        String name = direction + " von " + nearestLocation.getName()+ " "+ decimalFormat.format(nearestLocation.distanceTo(new Location("",latitude, longitude))) + " km";
+        String name = direction + " von " + nearestLocation.getName() + " " + decimalFormat.format(nearestLocation.distanceTo(new Location("", latitude, longitude))) + " km";
         Location location = new Location(name, latitude, longitude);
 
         // Höhe für die Location abrufen
@@ -122,6 +122,46 @@ public class LocationController {
         return ResponseEntity.ok().body(json);
     }
 
+    /**
+     *
+     * @param latitude_first_place
+     * @param longitude_first_place
+     * @param latitude_second_place
+     * @param longitude_second_place
+     * @param elevation_profile_points
+     * @return
+     */
+    @GetMapping("/elevationprofile")
+    public ResponseEntity<List<Double>> getElevationProfileBetween2Places(@RequestParam(value = "latitude_first") double latitude_first_place, @RequestParam(value = "longitude_first") double longitude_first_place, @RequestParam(value = "latitude_second") double latitude_second_place, @RequestParam(value = "longitude_second") double longitude_second_place, @RequestParam(value = "elevationprofilepoints") int elevation_profile_points) {
+        //First Location
+        Location first_location = new Location("First Place",latitude_first_place, longitude_first_place);
+        Location second_location = new Location("Second Place",latitude_second_place, longitude_second_place);
+
+        // Calculate the intermediate locations between the two points
+        List<Location> intermediateLocations = first_location.calculateIntermediatelocations(second_location, elevation_profile_points);
+
+        // Get the elevation information for each intermediate location
+        List<Double> elevations = new ArrayList<>();
+        for (Location intermediateLocation : intermediateLocations) {
+            File file = new File("src/main/resources/srtm_40_03.asc");
+            SrtmFile srtmFile = new SrtmFile(file);
+            Optional<Double> altitude = srtmFile.getAltitudeForLocation(intermediateLocation);
+            elevations.add(altitude.get());
+        }
+
+        // Return the elevation profile
+        return ResponseEntity.ok(elevations);
+        /*
+        localhost:8080/elevationprofile?latitude_first=&longitude_first=&latitude_second=&longitude_second=&elevationprofilepoints=
+        Works: localhost:8080/elevationprofile?latitude_first=47&longitude_first=15&latitude_second=47&longitude_second=16&elevationprofilepoints=10
+        localhost:8080/elevationprofile?latitude_first=47.0&longitude_first=15.0&latitude_second=47.0&longitude_second=16.0&elevationprofilepoints=10
+
+        */
+
+
+    }
+
 }
+
 
 

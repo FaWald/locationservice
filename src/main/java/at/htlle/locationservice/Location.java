@@ -1,8 +1,10 @@
 package at.htlle.locationservice;
 
 
-public class Location
-{
+import java.util.ArrayList;
+import java.util.List;
+
+public class Location {
     String name;
     Double latitude;
     Double longitude;
@@ -22,11 +24,9 @@ public class Location
     }
 
 
-
     public String getName() {
         return name;
     }
-
 
 
     public Double getLatitude() {
@@ -34,13 +34,11 @@ public class Location
     }
 
 
-
     public Double getLongitude() {
         return longitude;
     }
 
-    public Double distanceTo(Location other)
-    {
+    public Double distanceTo(Location other) {
         double latitude1 = this.getLatitude();
         double latitude2 = other.getLatitude();
         double longitude1 = this.getLongitude();
@@ -59,8 +57,7 @@ public class Location
     }
 
 
-    public Double directionTo(Location other)
-    {
+    public Double directionTo(Location other) {
         double lat1 = this.getLatitude();
         double lat2 = other.getLatitude();
         double lon1 = this.getLongitude();
@@ -82,10 +79,22 @@ public class Location
         return azimuth;
     }
 
+    public List<Location> calculateIntermediatelocations(Location other, int numberOfPoints) {
+        List<Location> intermediateLocations = new ArrayList<Location>();
+
+        double dLat = (other.getLatitude() - this.getLatitude()) / (numberOfPoints + 1);
+        double dLon = (other.getLongitude() - this.getLongitude()) / (numberOfPoints + 1);
+
+        for (int i = 1; i <= numberOfPoints; i++) {
+            double lat = this.getLatitude() + i * dLat;
+            double lon = this.getLongitude() + i * dLon;
+            intermediateLocations.add(new Location("Point " + i + " of " + numberOfPoints, lat, lon));
+        }
+        return intermediateLocations;
+    }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return String.format("%s(%.02f|%.02f)", this.name, this.latitude, this.longitude);
     }
 }
