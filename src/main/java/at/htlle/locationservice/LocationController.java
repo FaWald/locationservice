@@ -145,11 +145,12 @@ public class LocationController {
         for (Location intermediateLocation : intermediateLocations) {
             File file = new File("src/main/resources/srtm_40_03.asc");
             SrtmFile srtmFile = new SrtmFile(file);
-            Optional<Double> altitude = srtmFile.getAltitudeForLocation(intermediateLocation);
+            Optional<Double> altitude = srtmFile.getAltitudeForLocation(intermediateLocation); //Here is starting the 'bottleneck'
             elevations.add(altitude.get());
         }
 
         // Return the elevation profile
+        System.out.println(elevations);
         return ResponseEntity.ok(elevations);
         /*
         localhost:8080/elevationprofile?latitude_first=&longitude_first=&latitude_second=&longitude_second=&elevationprofilepoints=

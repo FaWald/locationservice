@@ -2,36 +2,7 @@
 <html>
 <head>
     <title>Location Service Client</title>
-    <meta charset="utf-8">
-    <script>
-        function searchLocation() {
-            // Lese den eingegebenen Ortsnamen aus dem Eingabefeld
-            var locationName = document.getElementById("locationName").value;
-
-            // Erstelle die URL für den Webservice-Aufruf
-            var url = "http://localhost:8080/locations?name=" + encodeURIComponent(locationName);
-
-            // Erstelle die XHR-Anfrage an den Webservice
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", url, true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    // Verarbeite die empfangenen Daten
-                    var location = JSON.parse(xhr.responseText);
-
-                    // Aktualisiere die HTML-Seite mit den Koordinaten
-                    document.getElementById("latitude").textContent = location.latitude;
-                    document.getElementById("longitude").textContent = location.longitude;
-
-                    // Erstelle den Link zu Google Maps
-                    var mapLink = "https://www.google.com/maps/search/?api=1&query=" + location.latitude + "," + location.longitude;
-                    document.getElementById("mapLink").href = mapLink;
-                    document.getElementById("mapLink").style.display = "block";
-                }
-            };
-            xhr.send();
-        }
-    </script>
+    <meta charset="UTF-8">
 </head>
 <body>
 <h1>Location Service Client</h1>
@@ -42,5 +13,6 @@
 <p>Latitude: <span id="latitude"></span></p>
 <p>Longitude: <span id="longitude"></span></p>
 <a id="mapLink" href="#" target="_blank" style="display:none;">Google Maps</a>
+<script src="location_finder_name.js"></script>
 </body>
 </html>

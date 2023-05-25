@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Höhenprofildiagramm</title>
+    <meta charset="UTF-8">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+<h1>Höhenprofildiagramm</h1>
+
+<form>
+    <label for="latitude_first">Latitude 1:</label>
+    <input type="text" id="latitude_first" name="latitude_first"><br><br>
+
+    <label for="longitude_first">Longitude 1:</label>
+    <input type="text" id="longitude_first" name="longitude_first"><br><br>
+
+    <label for="latitude_second">Latitude 2:</label>
+    <input type="text" id="latitude_second" name="latitude_second"><br><br>
+
+    <label for="longitude_second">Longitude 2:</label>
+    <input type="text" id="longitude_second" name="longitude_second"><br><br>
+
+    <button type="button" onclick="fetchData()">Diagramm anzeigen</button>
+</form>
+
+<div id="chart"></div>
+<script src="location_elevation_profile.js"></script>
+</body>
+</html>
